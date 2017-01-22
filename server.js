@@ -8,7 +8,7 @@ const app = express();
 // log
 app.use(morgan('common'));
 
-const blogPostsRouter = require('/blogPostsRouter');
+const blogPostsRouter = require('./blogPostsRouter');
 
 //Redirecting requests
 app.use('/blog-posts', blogPostsRouter);
