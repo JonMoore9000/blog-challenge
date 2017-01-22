@@ -13,12 +13,12 @@ const {BlogPosts} =	require('./models');
 BlogPosts.create('Save The World', 'The Earth is dying and we need to save it', 'Dany');
 BlogPosts.create('Need More Cats', 'The world needs more cats. there is not enough cats.' , 'Brom');
 
-//GET Request
+//GET BLOGS
 router.get('/', (req, res) => {
 	res.json(BlogPosts.get());
 });
 
-//Creating new Blog
+//CREATE BLOG
 router.post('/', jsonParser, (req, res)  => {
 	// require title, content, and author
 	const requiredFields = ['title', 'content', 'author']
@@ -34,14 +34,48 @@ router.post('/', jsonParser, (req, res)  => {
 	res.status(201).json(item);
 });
 
-//DELETE blog
+//DELETE BLOG
 router.delete('/:id', (req, res) => {
   BlogPosts.delete(req.params.id);
   console.log(`Deleted shopping list item \`${req.params.ID}\``);
   res.status(204).end();
 });
 
+//UPDATE BLOG
+router.put('/:id', jsonParser, (req, res) => {
+  const requiredFields = ['id', 'title', 'content', 'author'];
+  for (let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+  if (req.params.id !== req.body.id) {
+    const message = (
+      `Request path id (${req.params.id}) and request body id `
+      `(${req.body.id}) must match`);
+    console.error(message);
+    return res.status(400).send(message);
+  }
+  console.log(`Updating shopping list item \`${req.params.id}\``);
+  const updatedItem = BlogPosts.update({
+    id: req.params.id,
+    title: req.body.title,
+    content: req.body.content,
+    author: req.body.author
+  });
+  res.status(204).json(updatedItem);
+});
+
+
 module.exports = router;
+
+
+
+
+
 
 
 
