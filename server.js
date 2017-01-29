@@ -13,9 +13,15 @@ const blogPostsRouter = require('./blogPostsRouter');
 //Redirecting requests
 app.use('/blog-posts', blogPostsRouter);
 
-app.listen(process.env.PORT || 8080, () => {
-  console.log(`Your app is listening on port ${process.env.PORT || 8080}`);
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/views/index.html');
 });
+
+//app.listen(process.env.PORT || 8080, () => {
+  //console.log(`Your app is listening on port ${process.env.PORT || 8080}`);
+//});
 
 //let server;
 
